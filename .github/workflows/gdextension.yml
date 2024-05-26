@@ -133,11 +133,19 @@ jobs:
         id: output-name-prefix
         run: echo "name-prefix=${NAME_PREFIX}" >> $GITHUB_OUTPUT
 
-      - name: Setup Linux toolchain
-        if: matrix.opts.platform == 'linux'
-        uses: ./limboai/.github/actions/setup-linux-toolchain
+      # - name: Setup Linux toolchain
+      #   if: matrix.opts.platform == 'linux'
+      #   uses: ./limboai/.github/actions/setup-linux-toolchain
+      #   with:
+      #     arch: ${{matrix.opts.arch}}
+
+      - name: Use cached buildroot
+        id: cache-buildroot
+        uses: actions/cache@v4
         with:
-          arch: ${{matrix.opts.arch}}
+          path: buildroot
+          key: 16c8302fcb676c1f0fb9df73d6cff250ba1f4286
+          fail-on-cache-miss: true
 
       - name: Set up Python 3.x
         if: matrix.opts.platform == 'windows' || matrix.opts.platform == 'macos'
